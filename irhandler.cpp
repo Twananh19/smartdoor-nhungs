@@ -8,9 +8,9 @@ void initIR(int pin) {
     IrReceiver.begin(irPin, ENABLE_LED_FEEDBACK);
 }
 
-bool getIRKey(uint32_t &keyCode) {
+bool getIRKey(uint64_t &keyCode) {
     if (IrReceiver.decode()) {
-        keyCode = IrReceiver.decodedIRData.command;
+        keyCode = IrReceiver.decodedIRData.decodedRawData; // Lấy rawData 64 bit
         IrReceiver.resume();
         return true;
     }
