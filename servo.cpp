@@ -1,6 +1,8 @@
 #include "servo.h"
 #include <ESP32Servo.h>
 #include <Arduino.h>
+#include "hcsr04handler.h"
+
 
 Servo gateServo;
 unsigned long gateOpenMillis = 0;
@@ -20,9 +22,15 @@ void openGate() {
 }
 
 void handleGate() {
-    if (gateIsOpen && millis() - gateOpenMillis > 2000) { // 2 giây
-        closeGate();
-        gateIsOpen = false;
+    if (gateIsOpen) {
+        float distance = getDistanceCM();
+        if (distance > 0 && distance < 20) {
+            // Có vật cản, giữ cổng mở
+            gateOpenMillis = millis(); // Reset thời gian mở
+        } else if (millis() - gateOpenMillis > 500) { // Không còn vật cản, đợi 0.5s rồi đóng
+            closeGate();
+            gateIsOpen = false;
+        }
     }
 }
 

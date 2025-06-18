@@ -334,6 +334,7 @@
 #include <ArduinoJson.h>
 #include "uart.h"
 #include "irhandler.h" 
+#include "hcsr04handler.h"
 
 struct CardData
 {
@@ -399,11 +400,13 @@ void setup()
   initServo(12); // Chỉnh lại số chân phù hợp với mạch của bạn
   initUART(9600); // Khởi tạo UART với tốc độ 9600
   initIR(13);
+  initHCSR04(22, 14); // Thay chân phù hợp với phần cứng của bạn
   // initKeypad();
-
-  openGate();
-  delay(2000);
+  float distance = getDistanceCM();
   closeGate();
+  // openGate();
+  // delay(2000);
+  // closeGate();
 }
 
 void loop() {
